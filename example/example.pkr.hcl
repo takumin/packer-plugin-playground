@@ -1,8 +1,8 @@
 packer {
   required_plugins {
-    boilerplate = {
+    playground = {
       version = ">= 0.0.1"
-      source  = "github.com/takumin/boilerplate"
+      source  = "github.com/takumin/playground"
     }
   }
 }

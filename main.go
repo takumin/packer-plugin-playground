@@ -6,12 +6,12 @@ import (
 
 	"github.com/hashicorp/packer-plugin-sdk/plugin"
 
-	exampleBuilder "github.com/takumin/packer-plugin-boilerplate/builder/example"
-	exampleDataSource "github.com/takumin/packer-plugin-boilerplate/datasource/example"
-	examplePostProcessor "github.com/takumin/packer-plugin-boilerplate/post-processor/example"
-	exampleProvisioner "github.com/takumin/packer-plugin-boilerplate/provisioner/example"
+	exampleBuilder "github.com/takumin/packer-plugin-playground/builder/example"
+	exampleDataSource "github.com/takumin/packer-plugin-playground/datasource/example"
+	examplePostProcessor "github.com/takumin/packer-plugin-playground/post-processor/example"
+	exampleProvisioner "github.com/takumin/packer-plugin-playground/provisioner/example"
 
-	"github.com/takumin/packer-plugin-boilerplate/version"
+	"github.com/takumin/packer-plugin-playground/version"
 )
 
 func main() {

@@ -46,6 +46,8 @@ func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (pack
 	steps = append(steps, new(commonsteps.StepProvision))
 
 	state := new(multistep.BasicStateBag)
+	state.Put("hook", hook)
+	state.Put("ui", ui)
 
 	b.runner = commonsteps.NewRunner(steps, b.config.PackerConfig, ui)
 	b.runner.Run(ctx, state)

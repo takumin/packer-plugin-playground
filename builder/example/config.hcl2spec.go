@@ -18,6 +18,10 @@ type FlatConfig struct {
 	PackerOnError       *string           `mapstructure:"packer_on_error" cty:"packer_on_error" hcl:"packer_on_error"`
 	PackerUserVars      map[string]string `mapstructure:"packer_user_variables" cty:"packer_user_variables" hcl:"packer_user_variables"`
 	PackerSensitiveVars []string          `mapstructure:"packer_sensitive_variables" cty:"packer_sensitive_variables" hcl:"packer_sensitive_variables"`
+	RootfsUrls          []string          `mapstructure:"rootfs_urls" required:"true" cty:"rootfs_urls" hcl:"rootfs_urls"`
+	RootfsChecksum      *string           `mapstructure:"rootfs_checksum" required:"true" cty:"rootfs_checksum" hcl:"rootfs_checksum"`
+	TargetPath          *string           `mapstructure:"rootfs_target_path" cty:"rootfs_target_path" hcl:"rootfs_target_path"`
+	TargetExtension     *string           `mapstructure:"rootfs_target_extension" cty:"rootfs_target_extension" hcl:"rootfs_target_extension"`
 }
 
 // FlatMapstructure returns a new FlatConfig.
@@ -40,6 +44,10 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 		"packer_on_error":            &hcldec.AttrSpec{Name: "packer_on_error", Type: cty.String, Required: false},
 		"packer_user_variables":      &hcldec.AttrSpec{Name: "packer_user_variables", Type: cty.Map(cty.String), Required: false},
 		"packer_sensitive_variables": &hcldec.AttrSpec{Name: "packer_sensitive_variables", Type: cty.List(cty.String), Required: false},
+		"rootfs_urls":                &hcldec.AttrSpec{Name: "rootfs_urls", Type: cty.List(cty.String), Required: false},
+		"rootfs_checksum":            &hcldec.AttrSpec{Name: "rootfs_checksum", Type: cty.String, Required: false},
+		"rootfs_target_path":         &hcldec.AttrSpec{Name: "rootfs_target_path", Type: cty.String, Required: false},
+		"rootfs_target_extension":    &hcldec.AttrSpec{Name: "rootfs_target_extension", Type: cty.String, Required: false},
 	}
 	return s
 }

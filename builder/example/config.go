@@ -11,6 +11,7 @@ import (
 
 type Config struct {
 	common.PackerConfig `mapstructure:",squash"`
+	RootfsConfig        `mapstructure:",squash"`
 
 	ctx interpolate.Context
 }
@@ -27,6 +28,10 @@ func (c *Config) Prepare(raws ...interface{}) ([]string, error) {
 
 	var errs *packer.MultiError
 	warnings := make([]string, 0)
+
+	rootfsWarnings, rootfsErrs := c.RootfsConfig.Prepare(&c.ctx)
+	warnings = append(warnings, rootfsWarnings...)
+	errs = packer.MultiErrorAppend(errs, rootfsErrs...)
 
 	if errs != nil && len(errs.Errors) > 0 {
 		return warnings, errs

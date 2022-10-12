@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/hashicorp/go-getter/v2"
 	"github.com/hashicorp/hcl/v2/hcldec"
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
 	"github.com/hashicorp/packer-plugin-sdk/multistep/commonsteps"
@@ -30,7 +31,18 @@ func (b *Builder) Prepare(raws ...interface{}) (generatedVars []string, warnings
 }
 
 func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (packer.Artifact, error) {
+	// https://github.com/solo-io/packer-plugin-arm-image/blob/227d49f89dd8c20a86e19787c4c67ca6b5f13201/pkg/builder/builder.go#L239
+	getter.Decompressors = make(map[string]getter.Decompressor)
+
 	steps := []multistep.Step{
+		&commonsteps.StepDownload{
+			Description: "Rootfs",
+			ResultKey:   "rootfs_path",
+			Url:         b.config.RootfsUrls,
+			Checksum:    b.config.RootfsChecksum,
+			TargetPath:  b.config.TargetPath,
+			Extension:   b.config.TargetExtension,
+		},
 		new(commonsteps.StepProvision),
 	}
 

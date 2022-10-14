@@ -12,17 +12,17 @@ import (
 )
 
 type StepExtract struct {
-	RootfsPathKey       string
-	WorkingDirectoryKey string
+	RootfsKey string
+	ResultKey string
 }
 
 func (s *StepExtract) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packer.Ui)
-	rootfs_path := state.Get(s.RootfsPathKey).(string)
+	rootfs_path := state.Get(s.RootfsKey).(string)
 
 	if rootfs_path == "" {
-		ui.Error(fmt.Sprintf("'%s' must be set.", s.RootfsPathKey))
-		state.Put("error", fmt.Errorf("'%s' not set", s.RootfsPathKey))
+		ui.Error(fmt.Sprintf("'%s' must be set.", s.RootfsKey))
+		state.Put("error", fmt.Errorf("'%s' not set", s.RootfsKey))
 		return multistep.ActionHalt
 	}
 
@@ -31,7 +31,7 @@ func (s *StepExtract) Run(ctx context.Context, state multistep.StateBag) multist
 		state.Put("error", err)
 		return multistep.ActionHalt
 	}
-	state.Put(s.WorkingDirectoryKey, wd)
+	state.Put(s.ResultKey, wd)
 	ui.Say(fmt.Sprintf("Working Directory: %s", wd))
 
 	// #nosec G204
@@ -48,7 +48,7 @@ func (s *StepExtract) Run(ctx context.Context, state multistep.StateBag) multist
 }
 
 func (s *StepExtract) Cleanup(state multistep.StateBag) {
-	if err := os.RemoveAll(state.Get(s.WorkingDirectoryKey).(string)); err != nil {
+	if err := os.RemoveAll(state.Get(s.ResultKey).(string)); err != nil {
 		state.Put("error", err)
 	}
 }

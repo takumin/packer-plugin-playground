@@ -44,8 +44,8 @@ func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (pack
 			Extension:   b.config.TargetExtension,
 		},
 		&StepExtract{
-			RootfsPathKey:       "rootfs_path",
-			WorkingDirectoryKey: "working_directory",
+			RootfsKey: "rootfs_path",
+			ResultKey: "working_directory",
 		},
 		new(commonsteps.StepProvision),
 	}

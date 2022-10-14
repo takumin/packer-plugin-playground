@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
+	"strings"
 
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
 	"github.com/hashicorp/packer-plugin-sdk/packer"
@@ -31,6 +33,16 @@ func (s *StepExtract) Run(ctx context.Context, state multistep.StateBag) multist
 	}
 	state.Put(s.WorkingDirectoryKey, wd)
 	ui.Say(fmt.Sprintf("Working Directory: %s", wd))
+
+	// #nosec G204
+	out, err := exec.CommandContext(ctx, "rootlesskit", "tar", "-xvf", rootfs_path, "-C", wd).CombinedOutput()
+	if err != nil {
+		state.Put("error", err)
+		s.Cleanup(state)
+		return multistep.ActionHalt
+	}
+	state.Put("rootfs_extract", strings.Split(string(out), "\n"))
+	ui.Say("Extract Rootfs Archive")
 
 	return multistep.ActionContinue
 }

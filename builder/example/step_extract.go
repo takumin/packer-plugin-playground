@@ -3,28 +3,38 @@ package example
 import (
 	"context"
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
 	"github.com/hashicorp/packer-plugin-sdk/packer"
 )
 
 type StepExtract struct {
+	RootfsPathKey       string
+	WorkingDirectoryKey string
 }
 
 func (s *StepExtract) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packer.Ui)
-	rootfs_path := state.Get("rootfs_path").(string)
+	rootfs_path := state.Get(s.RootfsPathKey).(string)
 
 	if rootfs_path == "" {
-		ui.Error("'rootfs_path' must be set.")
-		state.Put("error", fmt.Errorf("'rootfs_path' not set"))
+		ui.Error(fmt.Sprintf("'%s' must be set.", s.RootfsPathKey))
+		state.Put("error", fmt.Errorf("'%s' not set", s.RootfsPathKey))
 		return multistep.ActionHalt
 	}
 
-	ui.Say(fmt.Sprintf("Rootfs_path to %q", rootfs_path))
+	wd, err := os.MkdirTemp("", "packer_rootfs")
+	if err != nil {
+		log.Fatal(err)
+	}
+	state.Put(s.WorkingDirectoryKey, wd)
+	ui.Say(fmt.Sprintf("Working Directory: %s", wd))
 
 	return multistep.ActionContinue
 }
 
 func (s *StepExtract) Cleanup(state multistep.StateBag) {
+	os.RemoveAll(state.Get(s.WorkingDirectoryKey).(string))
 }

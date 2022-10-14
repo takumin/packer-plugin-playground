@@ -43,7 +43,10 @@ func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (pack
 			TargetPath:  b.config.TargetPath,
 			Extension:   b.config.TargetExtension,
 		},
-		&StepExtract{},
+		&StepExtract{
+			RootfsPathKey:       "rootfs_path",
+			WorkingDirectoryKey: "working_directory",
+		},
 		new(commonsteps.StepProvision),
 	}
 

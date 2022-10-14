@@ -3,7 +3,6 @@ package example
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
@@ -27,7 +26,8 @@ func (s *StepExtract) Run(ctx context.Context, state multistep.StateBag) multist
 
 	wd, err := os.MkdirTemp("", "packer_rootfs")
 	if err != nil {
-		log.Fatal(err)
+		state.Put("error", err)
+		return multistep.ActionHalt
 	}
 	state.Put(s.WorkingDirectoryKey, wd)
 	ui.Say(fmt.Sprintf("Working Directory: %s", wd))
@@ -36,5 +36,7 @@ func (s *StepExtract) Run(ctx context.Context, state multistep.StateBag) multist
 }
 
 func (s *StepExtract) Cleanup(state multistep.StateBag) {
-	os.RemoveAll(state.Get(s.WorkingDirectoryKey).(string))
+	if err := os.RemoveAll(state.Get(s.WorkingDirectoryKey).(string)); err != nil {
+		state.Put("error", err)
+	}
 }

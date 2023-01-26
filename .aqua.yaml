@@ -16,6 +16,6 @@ packages:
 - name: takumin/gjson@v0.0.2
 - name: aquasecurity/trivy@v0.36.1
 - name: x-motemen/gobump@v0.2.0
-- name: hashicorp/packer-plugin-sdk/packer-sdc@v0.3.2
+- name: hashicorp/packer-plugin-sdk/packer-sdc@v0.3.3
 - name: rootless-containers/rootlesskit@v1.1.0
 - name: rootless-containers/slirp4netns@v1.2.0

@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/hashicorp/go-getter/v2 v2.1.1
 	github.com/hashicorp/hcl/v2 v2.14.1
-	github.com/hashicorp/packer-plugin-sdk v0.3.2
+	github.com/hashicorp/packer-plugin-sdk v0.3.3
 
 	// https://github.com/hashicorp/packer-plugin-sdk/issues/128#issuecomment-1235716326
 	github.com/zclconf/go-cty v1.10.0

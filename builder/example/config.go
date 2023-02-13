@@ -4,6 +4,7 @@ package example
 
 import (
 	"github.com/hashicorp/packer-plugin-sdk/common"
+	"github.com/hashicorp/packer-plugin-sdk/communicator"
 	"github.com/hashicorp/packer-plugin-sdk/packer"
 	"github.com/hashicorp/packer-plugin-sdk/template/config"
 	"github.com/hashicorp/packer-plugin-sdk/template/interpolate"
@@ -11,6 +12,7 @@ import (
 
 type Config struct {
 	common.PackerConfig `mapstructure:",squash"`
+	Comm                communicator.Config `mapstructure:",squash"`
 	RootfsConfig        `mapstructure:",squash"`
 
 	ctx interpolate.Context
@@ -24,6 +26,10 @@ func (c *Config) Prepare(raws ...interface{}) ([]string, error) {
 	}, raws...)
 	if err != nil {
 		return nil, err
+	}
+
+	if c.Comm.Type == "" {
+		c.Comm.Type = "rootlesskit"
 	}
 
 	var errs *packer.MultiError
